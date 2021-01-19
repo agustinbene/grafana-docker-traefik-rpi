@@ -1,0 +1,29 @@
+version: "2"
+services:
+
+ grafana:
+ 
+    image: grafana/grafana
+    restart: unless-stopped
+    user: "0"
+    networks:
+      - web
+    labels:
+        - "traefik.backend=grafana"
+        - "traefik.port=3000"
+        - "traefik.frontend.rule=Host:grafana.URL.com.ar"
+        - "traefik.docker.network=web"
+    environment:
+        - GF_PATHS_DATA=/var/lib/grafana
+        - GF_SECURITY_ALLOW_EMBEDDING=true
+        - GF_AUTH_ANONYMOUS_ENABLED=true
+        - GF_PATHS_LOGS=/var/log/grafana
+        - TZ=America/Argentina/Buenos_Aires     
+    volumes:
+        - /home/pi/grafana/data:/var/lib/grafana
+        - /home/pi/grafana/log:/var/log/grafana
+      
+networks:
+  web:
+    external:
+      name: web
